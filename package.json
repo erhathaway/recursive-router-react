@@ -1,0 +1,48 @@
+{
+  "name": "recursive-router-react",
+  "version": "1.0.0",
+  "description": "React bindings for recursive router",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.es.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c",
+    "start": "rollup -c -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erhathaway/recursive-router-react.git"
+  },
+  "author": "Ethan Hathaway",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/erhathaway/recursive-router-react/issues"
+  },
+  "homepage": "https://github.com/erhathaway/recursive-router-react#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.1",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.5",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-flow": "^6.23.0",
+    "eslint": "^5.4.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "rollup": "^0.64.1",
+    "rollup-plugin-babel": "^3.0.7",
+    "rollup-plugin-babel-minify": "^6.1.1",
+    "rollup-plugin-commonjs": "^9.1.5",
+    "rollup-plugin-eslint": "^5.0.0",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-watch": "^4.3.1"
+  },
+  "peerDependencies": {
+    "recursive-router": "file:../recursive-router",
+    "react": "^16.7.0"
+  }
+}
