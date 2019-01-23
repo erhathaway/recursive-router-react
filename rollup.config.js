@@ -29,7 +29,7 @@ export default {
     },
   ],
   plugins: [
-    eslint({}),
+    // eslint({}),
     resolve({
       customResolveOptions: {
         moduleDirectory: 'node_modules',

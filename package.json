@@ -35,16 +35,18 @@
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "npm": "^6.6.0",
+    "recursive-router": "file:../recursive-router",
     "rollup": "^0.64.1",
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-babel-minify": "^6.1.1",
     "rollup-plugin-commonjs": "^9.1.5",
     "rollup-plugin-eslint": "^5.0.0",
     "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-watch": "^4.3.1"
+    "rollup-watch": "^4.3.1",
+    "uuid": "^3.3.2"
   },
-  "peerDependencies": {
-    "recursive-router": "file:../recursive-router",
+  "peerDependencies": {},
+  "dependencies": {
     "react": ">= 16.3.x"
   }
 }
