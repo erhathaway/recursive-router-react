@@ -2,7 +2,6 @@
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var crypto = _interopDefault(require('crypto'));
 var React = _interopDefault(require('react'));
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
@@ -4810,66 +4809,9 @@ var Router = (_class = function () {
 
 var initalizeRouter$1 = initalizeRouter(Router);
 
-// Unique ID creation requires a high quality random # generator.  In node.js
-// this is pretty straight-forward - we use the crypto API.
-
-
-var rng = function nodeRNG() {
-  return crypto.randomBytes(16);
-};
-
-/**
- * Convert array of 16 byte values to UUID string format of the form:
- * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
- */
-var byteToHex = [];
-for (var i = 0; i < 256; ++i) {
-  byteToHex[i] = (i + 0x100).toString(16).substr(1);
-}
-
-function bytesToUuid(buf, offset) {
-  var i = offset || 0;
-  var bth = byteToHex;
-  // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
-  return [bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]]].join('');
-}
-
-var bytesToUuid_1 = bytesToUuid;
-
-function v4(options, buf, offset) {
-  var i = buf && offset || 0;
-
-  if (typeof options == 'string') {
-    buf = options === 'binary' ? new Array(16) : null;
-    options = null;
-  }
-  options = options || {};
-
-  var rnds = options.random || (options.rng || rng)();
-
-  // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
-  rnds[6] = rnds[6] & 0x0f | 0x40;
-  rnds[8] = rnds[8] & 0x3f | 0x80;
-
-  // Copy bytes to buffer, if provided
-  if (buf) {
-    for (var ii = 0; ii < 16; ++ii) {
-      buf[i + ii] = rnds[ii];
-    }
-  }
-
-  return buf || bytesToUuid_1(rnds);
-}
-
-var v4_1 = v4;
-
-var RouterContext = React.createContext('recursive-router');
-
 var generateRouter = function generateRouter() {
-  var uuid = v4_1();
-  var parent = null;
-  var seen = [];
-  var lastUsedParent = [];
+  var RouterContext = React.createContext('recursive-router');
+  var routerTree = initalizeRouter$1({});
 
   var RouterComponent = function (_React$Component) {
     inherits(RouterComponent, _React$Component);
@@ -4877,15 +4819,10 @@ var generateRouter = function generateRouter() {
     function RouterComponent(props) {
       classCallCheck(this, RouterComponent);
 
-      // console.log(this.props); // eslint-disable-line
-      // if (this.props.type === 'root') {
       var _this = possibleConstructorReturn(this, (RouterComponent.__proto__ || Object.getPrototypeOf(RouterComponent)).call(this, props));
 
-      if (parent === null) {
-        var routers = initalizeRouter$1({});
-
-        _this.router = routers;
-        // console.log('done making router', uuid); // eslint-disable-line
+      if (_this.props.parent === null) {
+        _this.routerTree = routerTree;
       }
 
       _this.show = _this.show.bind(_this);
@@ -4894,60 +4831,16 @@ var generateRouter = function generateRouter() {
       _this.state = {
         show: _this.show,
         hide: _this.hide
-      };
 
-      _this.parent = null;
-      _this.traverseComponentTreeStart();
-      return _this;
+        // this.routerRef = this.routerTree.registerOrFetchRouter({
+        //   name: this.props.name,
+        //   parent: this.props.parent,
+        //   type: this.props.type,
+        // });
+      };return _this;
     }
 
     createClass(RouterComponent, [{
-      key: 'componentWillUpdate',
-      value: function componentWillUpdate() {
-        this.traverseComponentTreeStart();
-      }
-    }, {
-      key: 'componentDidUpdate',
-      value: function componentDidUpdate() {
-        this.traverseComponentTreeEnd();
-      }
-    }, {
-      key: 'componentDidMount',
-      value: function componentDidMount() {
-        this.traverseComponentTreeEnd();
-      }
-    }, {
-      key: 'traverseComponentTreeStart',
-      value: function traverseComponentTreeStart() {
-        // console.log('starting mount: ', this.props.name); // eslint-disable-line
-        // this.previousParent = parent; // memoize previous parent
-        this.parent = (parent || '').slice();
-        parent = this.props.name.slice();
-        // console.log('parent: ', this.parent)
-      }
-    }, {
-      key: 'traverseComponentTreeEnd',
-      value: function traverseComponentTreeEnd() {
-        var _this2 = this;
-
-        console.log('-----------------');
-
-        var expectedParent = this.parent.slice();
-        if (!seen.includes(expectedParent)) {
-          parent = expectedParent; // set previous parent
-        } else if (parent === this.props.name) {
-          parent = lastUsedParent.reverse().find(function (n) {
-            return n !== _this2.props.name;
-          }).slice();
-        }
-
-        seen.push(this.props.name);
-        lastUsedParent.push(parent.slice());
-
-        console.log('finised mounting', this.props.name);
-        console.log('parent::', parent);
-      }
-    }, {
       key: 'show',
       value: function show(name) {
         console.log('showing', name); // eslint-disable-line
@@ -4960,8 +4853,8 @@ var generateRouter = function generateRouter() {
     }, {
       key: 'render',
       value: function render() {
-        console.log(this.props.name);
-        if (this.props.type === 'root') {
+        console.log(this.props.name, this.props.parent);
+        if (this.parent === null) {
           return React.createElement(
             RouterContext.Provider,
             { value: this.state },

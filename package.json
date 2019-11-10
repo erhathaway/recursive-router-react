@@ -47,6 +47,7 @@
   },
   "peerDependencies": {},
   "dependencies": {
-    "react": ">= 16.3.x"
+    "react": ">= 16.3.x",
+    "react-dom": "^16.7.0"
   }
 }
